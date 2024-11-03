@@ -21,8 +21,8 @@
 - [TARGET] cd /usr/share/vitis_ai_library/models/Net_int/
 - sieć uruchamiamy w następujący sposób: xdputil run <xmodel> [-i <subgraph_index>] <input_bin>
 - <input_bin> to nasze dane wejściowe w tym przypadku zdjęcie MNIST, ale w formacie tablicy .npy
-- jak można zauważyć sieć jako argument przyjmuje tablice .npy, aby przygotować odpowiednią tablicę należy pobrać lub stworzyć zdjęcie MNIST, a
-następnie przerobić je za pomocą skryptu Mnist_Vitis_Ai/target_scripts/convert.py
+- jak można zauważyć sieć jako argument przyjmuje tablice .npy, aby przygotować odpowiednią tablicę należy pobrać lub stworzyć zdjęcie MNIST (28x28), a
+następnie przerobić je za pomocą skryptu Mnist_Vitis_Ai/target_scripts/convert.py, https://www.kaggle.com/datasets/alexanderyyy/mnist-png - link do zdjec png z bazy MNIST
 - tak przygotowaną tablicę można przesłać na fpga przez scp
 - teraz uruchamiamy sieć komendą:
 xdputil run Net_int.xmodel path_to_array/array.npy

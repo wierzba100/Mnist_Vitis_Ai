@@ -6,4 +6,7 @@ data_type = np.int8
 
 data = np.fromfile(file_path, dtype=data_type)
 
+max_index = np.argmax(data)
+
 print(data)
+print(f'Predicted digit: : {max_index}')

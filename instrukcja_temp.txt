@@ -1,0 +1,31 @@
+- Pobierz repozytorium: git clone https://github.com/wierzba100/Mnist_Vitis_Ai.git
+- uruchom skrypt main.py - tworzenie sieci
+- przetestuj test.py należy zmienić sciezke do obrazu typu MNIST
+- Uruchom środowisko Vitis-Ai
+- source ~/petalinux_sdk_2022.2/environment-setup-cortexa72-cortexa53-xilinx-linux
+- ./docker_run.sh xilinx/vitis-ai-pytorch-cpu:latest
+- conda activate vitis-ai-pytorch
+- przekopiuj folder mnist/ do ~/Vitis-AI/
+- cd mnist/
+- przekopiuj do folderu model/ wcześniej wytrenowaną sieć mnist_model.pth
+- Wykonuj komendy po kolei
+- python quant.py --quant_mode float --data_dir mnist_data --model_dir model
+- python quant.py --quant_mode float --inspect --target DPUCZDX8G_ISA1_B4096 --model_dir model
+- python quant.py --quant_mode calib --data_dir mnist_data --model_dir model --subset_len 200
+- python quant.py --model_dir model --data_dir mnist_data --quant_mode test
+- python quant.py --quant_mode test --subset_len 1 --batch_size=1 --model_dir model --data_dir mnist_data --deploy
+- vai_c_xir -x quantize_result/Net_int.xmodel -a /opt/vitis_ai/compiler/arch/DPUCZDX8G/KV260/arch.json -o Net_int -n Net_int
+- do folderu Net_int przekopiuj skrypt Mnist_Vitis_Ai/target_scripts/decode.py
+- scp -r Net_int root@[TARGET_IP_ADDRESS]:/usr/share/vitis_ai_library/models/
+- zaloguj się na fpga przy użyciu ssh
+- [TARGET] cd /usr/share/vitis_ai_library/models/Net_int/
+- sieć uruchamiamy w następujący sposób: xdputil run <xmodel> [-i <subgraph_index>] <input_bin>
+- <input_bin> to nasze dane wejściowe w tym przypadku zdjęcie MNIST, ale w formacie tablicy .npy
+- jak można zauważyć sieć jako argument przyjmuje tablice .npy, aby przygotować odpowiednią tablicę należy pobrać lub stworzyć zdjęcie MNIST, a
+następnie przerobić je za pomocą skryptu Mnist_Vitis_Ai/target_scripts/convert.py
+- tak przygotowaną tablicę można przesłać na fpga przez scp
+- teraz uruchamiamy sieć komendą:
+xdputil run Net_int.xmodel path_to_array/array.npy
+- sieć powinna zwrócić wynik w postaci binarnej, komunikat: "dump output to  0.Net__Net_Linear_fc2__ret_fix.bin"
+- aby zdekodować wynik uruchamiamy skrypt: python3 decode.py
+- w konsoli powinien wyprintować się wynik z poszczególnymi wartościami dla każdej z liczb, im wieksza ocena tym bardziej podobna liczba

@@ -10,7 +10,6 @@ import torch
 import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
-#from torchvision.models.resnet import resnet18
 
 from tqdm import tqdm
 

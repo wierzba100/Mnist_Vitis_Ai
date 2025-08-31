@@ -7,7 +7,7 @@ from PIL import Image
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model_path = "mnist_cnn.pth"
-img_path = "seven.png"
+img_path = "path_to_img.png"
 
 # Transformacje takie same jak przy trenowaniu
 transform = transforms.Compose([

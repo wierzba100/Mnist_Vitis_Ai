@@ -3,11 +3,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import transforms
 from PIL import Image
+import time
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model_path = "mnist_cnn.pth"
-img_path = "path_to_img.png"
+img_path = "seven.png"
 
 # Transformacje takie same jak przy trenowaniu
 transform = transforms.Compose([
@@ -51,9 +52,12 @@ model.eval()
 img = Image.open(img_path)
 img = transform(img).unsqueeze(0).to(device)
 
+# Detekcja
+start_time = time.time()
 with torch.no_grad():
     output = model(img)
     pred = output.argmax(dim=1, keepdim=True)
+end_time = time.time()
 
 print("Rozpoznana cyfra:", pred.item())
-
+print(f"Czas detekcji: {end_time - start_time:.6f} sekund")
